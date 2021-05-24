@@ -41,7 +41,7 @@ def download_nlp_paper(conference, year, keywords=None, savedir=None, poolnum=8)
     conference = conference.lower()
     if not savedir:
         savedir = os.getcwd()
-    savedir = os.path.join(os.path.abspath(savedir), '{0}{1}'.format(conference.upper(), year))
+    savedir = os.path.join(os.path.abspath(savedir), '{0}{1}-{2}'.format(conference.upper(), year, keywords))
     if not os.path.isdir(savedir):
         os.mkdir(savedir)
     url = 'https://www.aclweb.org/anthology/events/{0}-{1}/'.format(conference, year)
@@ -95,6 +95,19 @@ def download_nlp_paper(conference, year, keywords=None, savedir=None, poolnum=8)
 
 
 if __name__ == '__main__':
-    # download_nlp_paper('naacl', 2000, 'summari')
-    for i in range(2000, 2020):
-        download_nlp_paper('cl', i, 'summar')
+    import argparse
+
+    parser = argparse.ArgumentParser(description='Process some integers.')
+    parser.add_argument('--event', type=str, 
+                        help='Conference/Trans Name.')
+
+    parser.add_argument('--year', type=str,
+                        help='Conference/Trans Year')
+    parser.add_argument('--keywords', type=str, default=None, 
+                        help='Keywords with - as link')
+    parser.add_argument('--data_dir', type=str, default=None,
+                        help='Conference/Trans Name.')
+    parser.add_argument('--cpus', type=int, default=8,
+                        help='Conference/Trans Name.')
+    args = parser.parse_args()
+    download_nlp_paper(args.event, args.year, args.keywords, args.data_dir, args.cpus)
